@@ -1,0 +1,117 @@
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-wrap">
+        <i class="ti ti-cricket" aria-hidden="true"></i>
+      </div>
+      <div>
+        <div class="app-title">Cricket Predictor</div>
+        <div class="app-sub">Admin panel</div>
+      </div>
+    </div>
+    <button class="logout-btn" (click)="logout()">
+      <i class="ti ti-logout" aria-hidden="true"></i> Logout
+    </button>
+  </div>
+
+  <div class="content">
+
+    <!-- Loading -->
+    <div class="empty" *ngIf="loading">
+      <i class="ti ti-loader" style="font-size:32px;"></i>
+      <p>Loading match data...</p>
+    </div>
+
+    <!-- No match -->
+    <div class="empty" *ngIf="!loading && !match">
+      <i class="ti ti-circle-check" style="font-size:48px; color:#3B6D11;"></i>
+      <p>No upcoming matches found.</p>
+    </div>
+
+    <!-- Match Card -->
+    <ng-container *ngIf="!loading && match">
+      <div class="section-label">Next match</div>
+
+      <div class="match-card">
+
+        <!-- Banner -->
+        <div class="match-banner">
+          <div class="match-date-pill">
+            <i class="ti ti-calendar" aria-hidden="true"></i>
+            {{ match.match_date | date:'EEE, dd MMM yyyy · HH:mm' }}
+          </div>
+          <div class="status-pill">Upcoming</div>
+        </div>
+
+        <!-- Teams -->
+        <div class="teams-row">
+          <div class="team-block">
+            <div class="team-avatar">{{ getTeamName(match.team1) }}</div>
+            <div class="team-name">{{ getTeamName(match.team1) }}</div>
+          </div>
+          <div class="vs-block">vs</div>
+          <div class="team-block">
+            <div class="team-avatar">{{ getTeamName(match.team2) }}</div>
+            <div class="team-name">{{ getTeamName(match.team2) }}</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Form -->
+        <div class="form-section">
+
+          <!-- Winner -->
+          <div>
+            <span class="field-label">Select winner</span>
+            <div class="winner-btns">
+              <button class="winner-btn"
+                [class.selected]="selectedWinner === getTeamName(match.team1)"
+                (click)="selectedWinner = getTeamName(match.team1)">
+                {{ getTeamName(match.team1) }}
+              </button>
+              <button class="winner-btn"
+                [class.selected]="selectedWinner === getTeamName(match.team2)"
+                (click)="selectedWinner = getTeamName(match.team2)">
+                {{ getTeamName(match.team2) }}
+              </button>
+            </div>
+          </div>
+
+          <!-- NRR -->
+          <div>
+            <span class="field-label">Update NRR</span>
+            <div class="nrr-grid">
+              <div class="nrr-card">
+                <div class="nrr-team">{{ getTeamName(match.team1) }}</div>
+                <input type="number" step="0.001" [(ngModel)]="team1Nrr" placeholder="NRR" />
+              </div>
+              <div class="nrr-card">
+                <div class="nrr-team">{{ getTeamName(match.team2) }}</div>
+                <input type="number" step="0.001" [(ngModel)]="team2Nrr" placeholder="NRR" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages -->
+          <div class="success-bar" *ngIf="successMessage">
+            <i class="ti ti-circle-check" aria-hidden="true"></i>
+            {{ successMessage }}
+          </div>
+          <div class="error-bar" *ngIf="errorMessage">
+            <i class="ti ti-alert-circle" aria-hidden="true"></i>
+            {{ errorMessage }}
+          </div>
+
+          <button class="save-btn" (click)="submitResult()" [disabled]="loading">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            Save result
+          </button>
+
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

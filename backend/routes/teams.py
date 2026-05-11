@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from db.supabase_rest import get, insert
+from db.supabase_rest import get, insert, update
 
 router = APIRouter(prefix="/teams", tags=["teams"])
 
@@ -18,3 +18,14 @@ def get_teams_by_tournament(tournament_id: int):
 def create_team(team: dict):
     created = insert("teams", team)
     return created
+
+@router.patch("/{team_id}/nrr")
+def update_team_nrr(team_id: int, payload: dict):
+    print(f"Updating team {team_id} with Played {payload['played']}, Won {payload['won']}, Lost {payload['lost']}, NRR {payload['nrr']}, Points {payload['points']}");
+    return update("teams", f"?id=eq.{team_id}", {
+        "nrr": payload["nrr"],
+        "played": payload["played"],
+        "won": payload["won"],
+        "lost": payload["lost"],
+        "points": payload["points"]
+    })

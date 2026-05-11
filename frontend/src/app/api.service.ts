@@ -19,4 +19,17 @@ export class ApiService {
   getFutureMatches(tournamentId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.base}/matches/?tournament_id=${tournamentId}`);
   }
+
+  getLatestMatch(tournamentId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.base}/matches/latest?tournament_id=${tournamentId}`);
+  }
+
+  updateMatchResult(matchId: number, winner: string): Observable<any> {
+    return this.http.patch(`${this.base}/matches/${matchId}/result`, { winner });
+  }
+
+  updateTeamNrr(teamId: number, played: number, won: number, lost: number, nrr: number, points: number): Observable<any> {
+    return this.http.patch(`${this.base}/teams/${teamId}/nrr`, { played, won, lost, nrr, points });
+  }
+
 }

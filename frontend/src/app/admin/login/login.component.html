@@ -1,0 +1,39 @@
+<div class="page">
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">
+        <mat-icon>sports_cricket</mat-icon>
+      </div>
+      <div>
+        <div class="app-name">Cricket Predictor</div>
+        <div class="app-sub">Admin panel</div>
+      </div>
+    </div>
+
+    <div class="error-box" *ngIf="error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+
+    <div class="field">
+      <label>Username</label>
+      <div class="input-wrap">
+        <mat-icon class="field-icon">person</mat-icon>
+        <input [(ngModel)]="username" type="text" placeholder="Enter username" (keyup.enter)="login()" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <div class="input-wrap">
+        <mat-icon class="field-icon">lock</mat-icon>
+        <input [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter password" (keyup.enter)="login()" />
+        <button class="eye-btn" type="button" (click)="showPassword = !showPassword">
+          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <button class="login-btn" (click)="login()">Sign in to admin</button>
+  </div>
+</div>
