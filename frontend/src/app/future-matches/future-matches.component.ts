@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../api.service';
-import { MatDialog } from '@angular/material/dialog';
-import { LoadingDialogComponent } from '../loading-dialog/loading-dialog.component';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-future-matches',
@@ -19,25 +18,20 @@ export class FutureMatchesComponent implements OnInit {
   matches: any[] = [];
   teams: any[] = [];
   predictionTeams: any[] = [];
-  loadingRef: any;
 
   constructor(
     private route: ActivatedRoute,
-    private dialog: MatDialog,
+    private loadingService: LoadingService,
     private api: ApiService
   ) {}
 
   ngOnInit() {
-    this.loadingRef = this.dialog.open(LoadingDialogComponent, {
-        disableClose: true,
-        panelClass: 'loading-dialog'
-    });
-
     this.tournamentId = Number(this.route.snapshot.paramMap.get('tournamentId'));
     this.loadTeams();
   }
 
   loadTeams() {
+    this.loadingService.show();
     this.api.getTeamsByTournament(this.tournamentId).subscribe({
         next: teams => {
             this.teams = teams;
@@ -52,17 +46,17 @@ export class FutureMatchesComponent implements OnInit {
                     team2Name: this.getTeamName(m.team2),
                     predictedWinner: '' // Add a property to hold the predicted winner
                 }));
-                this.loadingRef.close();
+                this.loadingService.hide();
             },
             error: err => {
                 console.error('Error loading matches', err);
-                this.loadingRef.close();
+                this.loadingService.hide();
             }
             });
         },
         error: err => {
             console.error('Error loading teams', err);
-            this.loadingRef.close();
+            this.loadingService.hide();
         }
     });   
   }
@@ -105,7 +99,7 @@ export class FutureMatchesComponent implements OnInit {
         // Remove highlight after 2 seconds
         setTimeout(() => {
             t.justMoved = false;
-        }, 2000);
+        }, 500);
       }
     });
 
@@ -117,7 +111,7 @@ export class FutureMatchesComponent implements OnInit {
 
   simulateAll() {
     //this.loadTeams(); // Reset to original state before simulating
-
+    this.loadingService.show();
     this.matches.forEach(m => {
         const t1 = this.predictionTeams.find(t => t.id === m.team1);
         const t2 = this.predictionTeams.find(t => t.id === m.team2);
@@ -131,6 +125,7 @@ export class FutureMatchesComponent implements OnInit {
 
         this.selectWinner(m, winner);
     });
+    this.loadingService.hide();
   }
 
 }

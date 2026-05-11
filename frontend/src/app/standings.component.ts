@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiService } from './api.service';
-import { MatDialog } from '@angular/material/dialog';
-import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
+import { LoadingService } from './services/loading.service';
 
 @Component({
   selector: 'app-standings',
@@ -18,24 +17,21 @@ export class StandingsComponent implements OnInit {
   
   constructor(
     private router: Router,
-    private dialog: MatDialog,
+    private loadingService: LoadingService,
     private api: ApiService
   ) {}
 
   ngOnInit() {
     console.log('Loading teams from backend...');
-    const loadingRef = this.dialog.open(LoadingDialogComponent, {
-      disableClose: true,
-      panelClass: 'loading-dialog'
-    });
+    this.loadingService.show();
     this.api.getTeamsByTournament(3).subscribe({
       next: data => {
         this.teams = data;
-        loadingRef.close();
+        this.loadingService.hide();
         console.log('Teams loaded:', this.teams);
       },
       error: err => {
-        loadingRef.close();
+        this.loadingService.hide();
         console.error('Error loading teams:', err);
       }
     });  
