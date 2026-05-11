@@ -13,8 +13,15 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let s of teams; let i = index" [class.top-four]="i < 4">
-      <td>{{ s.name }}</td>
+    <tr *ngFor="let s of teams; let i = index" [class.top-four]="i < 4"
+      [class.qualified]="s.won > 7"
+      [class.eliminated]="s.lost > 7">
+
+      <td>
+          {{ s.name }} 
+          <span *ngIf="s.lost > 7">(Eliminated)</span>
+          <span *ngIf="s.won > 7">(Qualified)</span>
+      </td>
       <td>{{ s.played }}</td>
       <td>{{ s.won }}</td>
       <td>{{ s.lost }}</td>

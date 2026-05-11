@@ -19,7 +19,7 @@
           <td>{{ m.match_date }}</td>
           <td>{{ m.team1Name }} vs {{ m.team2Name }}</td>
           <td>
-            <select [(ngModel)]="m.predictedWinner" (ngModelChange)="selectWinner(m, m.predictedWinner)">
+            <select [ngModel]="m.predictedWinner" (change)="selectWinnerEvent(m, $event)">
               <option value="">Select</option>
               <option [value]="m.team1Name">{{ m.team1Name }}</option>
               <option [value]="m.team2Name">{{ m.team2Name }}</option>

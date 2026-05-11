@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../api.service';
 import { LoadingService } from '../services/loading.service';
+import { Observable } from 'rxjs/internal/Observable';
+import { tap } from 'rxjs/internal/operators/tap';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { error } from 'console';
 
 @Component({
   selector: 'app-future-matches',
@@ -18,6 +22,7 @@ export class FutureMatchesComponent implements OnInit {
   matches: any[] = [];
   teams: any[] = [];
   predictionTeams: any[] = [];
+  dataReady: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,38 +32,24 @@ export class FutureMatchesComponent implements OnInit {
 
   ngOnInit() {
     this.tournamentId = Number(this.route.snapshot.paramMap.get('tournamentId'));
-    this.loadTeams();
+    this.resetPage();
   }
-
-  loadTeams() {
-    this.loadingService.show();
-    this.api.getTeamsByTournament(this.tournamentId).subscribe({
-        next: teams => {
-            this.teams = teams;
-            this.predictionTeams = teams;
-
-            // Load matches after teams are loaded
-            this.api.getFutureMatches(this.tournamentId).subscribe({
-                next: futureMatches => {
-                this.matches = futureMatches.map(m => ({
-                    ...m,
-                    team1Name: this.getTeamName(m.team1),
-                    team2Name: this.getTeamName(m.team2),
-                    predictedWinner: '' // Add a property to hold the predicted winner
-                }));
-                this.loadingService.hide();
-            },
-            error: err => {
-                console.error('Error loading matches', err);
-                this.loadingService.hide();
-            }
-            });
-        },
-        error: err => {
-            console.error('Error loading teams', err);
-            this.loadingService.hide();
-        }
-    });   
+  loadTeams(): Observable<any> {
+    return this.api.getTeamsByTournament(this.tournamentId).pipe(
+      tap(teams => {
+        this.teams = teams;
+        this.predictionTeams = teams;
+      }),
+      switchMap(() => this.api.getFutureMatches(this.tournamentId)),
+      tap(futureMatches => {
+        this.matches = futureMatches.map(m => ({
+          ...m,
+          team1Name: this.getTeamName(m.team1),
+          team2Name: this.getTeamName(m.team2),
+          predictedWinner: ''
+        }));
+      })
+    );
   }
 
   getTeamName(teamId: number) {
@@ -66,13 +57,37 @@ export class FutureMatchesComponent implements OnInit {
     return t ? t.name : 'Unknown';
   }
 
-  selectWinner(match: any, winner: string) {
+  selectWinnerEvent(match: any, event: Event) {
+    const select = event.target as HTMLSelectElement;
+    const winner = select.value;
+    const previousWinner = match.predictedWinner;
+    match.predictedWinner = winner;
+    console.log('Winner selected for match', match.id, ':', winner, ': Previous winner:', previousWinner);  
+    if (previousWinner === winner) {
+      return; // No change in winner, so do nothing
+    } 
+    this.selectWinner(match, winner, previousWinner);
+  }
+
+  selectWinner(match: any, winner: string, previousWinner?: string) {
     match.predictedWinner = winner;
     const t1 = this.predictionTeams.find(t => t.id === match.team1);
     const t2 = this.predictionTeams.find(t => t.id === match.team2);
 
-    t1.played++;
-    t2.played++;
+    if(!previousWinner)
+    {
+      t1.played++;
+      t2.played++;
+    } else {
+      // Revert previous winner's stats
+      if(previousWinner === t1.name) {    
+        t1.won--;
+        t1.points -= 2;
+      } else if(previousWinner === t2.name) {
+        t2.won--;
+        t2.points -= 2;
+      }     
+    }
     t1.justMoved = true;    
     t2.justMoved = true;
 
@@ -106,26 +121,52 @@ export class FutureMatchesComponent implements OnInit {
   }
 
   resetPage() {
-    this.loadTeams();
+    this.dataReady = false;
+    this.loadingService.show();
+    this.loadTeams().subscribe({
+      next: () => {
+        this.dataReady = true;
+        this.loadingService.hide();
+      },
+      error: err => {
+        console.error('Error loading data', err);
+        this.dataReady = true;
+        this.loadingService.hide();
+      }
+    });
   }
 
   simulateAll() {
-    //this.loadTeams(); // Reset to original state before simulating
     this.loadingService.show();
-    this.matches.forEach(m => {
-        const t1 = this.predictionTeams.find(t => t.id === m.team1);
-        const t2 = this.predictionTeams.find(t => t.id === m.team2);
+    this.dataReady = false;
+    this.loadTeams().subscribe(({
+      next: () => {
+        this.matches.forEach(m => {
+            const t1 = this.predictionTeams.find(t => t.id === m.team1);
+            const t2 = this.predictionTeams.find(t => t.id === m.team2);
 
-        if (!t1 || !t2) {
-            console.error('Team not found for match', m);   
-            return;
-        }
-        // Random winner
-        const winner = Math.random() <= 0.5 ? t1.name : t2.name;
+            if (!t1 || !t2) {
+                console.error('Team not found for match', m);   
+                return;
+            }
+            // Random winner
+            const winner = Math.random() <= 0.5 ? t1.name : t2.name;
+            m.predictedWinner = winner;
 
-        this.selectWinner(m, winner);
-    });
-    this.loadingService.hide();
+            this.selectWinner(m, winner);
+        });
+        this.dataReady = true;
+        this.loadingService.hide();
+    }, 
+    error: err => {
+        console.error('Error simulating matches:', err);
+        this.dataReady = true;
+        this.loadingService.hide(); 
+    },
+    complete: () => {
+        console.log('All matches simulated');
+    }
+    }));  
   }
 
 }
