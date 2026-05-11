@@ -1,0 +1,29 @@
+<h1>Cricket Standings</h1>
+
+<table *ngIf="teams.length > 0" class="standings-table">
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Played</th>
+      <th>Won</th>
+      <th>Lost</th>
+      <th>Points</th>
+      <th>NRR</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let s of teams; let i = index" [class.top-four]="i < 4">
+      <td>{{ s.name }}</td>
+      <td>{{ s.played }}</td>
+      <td>{{ s.won }}</td>
+      <td>{{ s.lost }}</td>
+      <td>{{ s.points }}</td>
+      <td>{{ s.nrr }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<button class="future-btn" *ngIf="teams.length > 0" (click)="goToFutureMatches()">
+  Predict Future Matches
+</button>

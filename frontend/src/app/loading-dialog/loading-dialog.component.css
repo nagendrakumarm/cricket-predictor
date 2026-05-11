@@ -1,0 +1,13 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  font-size: 18px;
+  color: #1976d2;
+}
+
+p {
+  margin-top: 15px;
+  font-weight: 500;
+}
