@@ -136,15 +136,6 @@ select:focus {
   background: #e8f5e9;
 }
 
-.top-four {
-  background: #c8e6c9 !important; /* light green */
-  font-weight: 600;
-}
-
-.top-four:hover {
-  background: #b2dfdb !important; /* slightly darker on hover */
-}
-
 .moved {
   background-color: #ffcdd2 !important; /* light red */
   transition: background-color 1s ease;

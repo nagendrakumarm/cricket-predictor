@@ -26,7 +26,13 @@ export class StandingsComponent implements OnInit {
     this.loadingService.show();
     this.api.getTeamsByTournament(3).subscribe({
       next: data => {
-        this.teams = data;
+        const cutOffPoints = data.length >= 4 ? data[3].points : 0;
+        const cutOffQualified = data.length >= 4 ? data[3].points + ((14 - data[3].played) * 2) : 0;
+        this.teams = data.map((team: any) => ({
+          ...team,
+          qualified: team.points > cutOffQualified,
+          eliminated: team.points + ((14 - team.played) * 2) < cutOffPoints
+        }));
         this.loadingService.hide();
         console.log('Teams loaded:', this.teams);
       },

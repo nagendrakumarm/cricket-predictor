@@ -3,3 +3,19 @@
   border-radius: 12px;
   padding: 0;
 }
+
+.top-four {
+  background: #d8f4da !important;
+  font-weight: 600;
+}
+
+.qualified {
+  background: #b7f9ba !important;
+  font-weight: 600;
+}
+
+.eliminated {
+  background: #ffebee !important;
+  font-weight: 600;
+}
+

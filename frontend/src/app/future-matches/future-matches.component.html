@@ -50,8 +50,15 @@
             [class.top-four]="i < 4"
             [ngClass]="{
                 'moved': t.justMoved
-            }">
-          <td>{{ t.name }}</td>
+            }"
+            [class.qualified]="t.qualified || (i < 4 && t.played === 14)"
+            [class.eliminated]="t.eliminated || (i >= 4 && t.played === 14)" >
+
+          <td>
+              {{ t.name }} 
+              <span *ngIf="t.eliminated || (i >= 4 && t.played === 14)">(Eliminated)</span>
+              <span *ngIf="t.qualified || (i < 4 && t.played === 14)">(Qualified)</span>
+          </td>
           <td>{{ t.played }}</td>
           <td>{{ t.won }}</td>
           <td>{{ t.lost }}</td>

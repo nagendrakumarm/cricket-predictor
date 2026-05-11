@@ -31,21 +31,6 @@
   cursor: pointer;
 }
 
-.top-four {
-  background: #e8f5e9 !important;
-  font-weight: 600;
-}
-
-.qualified {
-  background: #c8e6c9 !important;
-  font-weight: 600;
-}
-
-.eliminated {
-  background: #ffebee !important;
-  font-weight: 600;
-}
-
 .future-btn {
   background: #1976d2;
   color: white;

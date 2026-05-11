@@ -39,6 +39,7 @@ export class FutureMatchesComponent implements OnInit {
       tap(teams => {
         this.teams = teams;
         this.predictionTeams = teams;
+        this.updateStandings();
       }),
       switchMap(() => this.api.getFutureMatches(this.tournamentId)),
       tap(futureMatches => {
@@ -108,7 +109,12 @@ export class FutureMatchesComponent implements OnInit {
     // Sort by points DESC
     this.predictionTeams.sort((a, b) => b.points - a.points);
 
+    const cutOffPoints = this.predictionTeams.length >= 4 ? this.predictionTeams[3].points : 0;
+    const cutOffQualified = this.predictionTeams.length >= 4 ? this.predictionTeams[3].points + ((14 - this.predictionTeams[3].played) * 2) : 0;
+
     this.predictionTeams.forEach(t => {
+      t.qualified =  t.points > cutOffQualified;
+      t.eliminated = t.points + ((14 - t.played) * 2) < cutOffPoints;
       
       if (t.justMoved) {
         // Remove highlight after 2 seconds
