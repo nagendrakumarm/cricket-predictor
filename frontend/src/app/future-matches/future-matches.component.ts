@@ -60,6 +60,7 @@ export class FutureMatchesComponent implements OnInit {
 
   selectWinnerEvent(match: any, event: Event) {
     const select = event.target as HTMLSelectElement;
+    const selected = (event.target as HTMLSelectElement).value;
     const winner = select.value;
     const previousWinner = match.predictedWinner;
     match.predictedWinner = winner;
@@ -175,4 +176,7 @@ export class FutureMatchesComponent implements OnInit {
     }));  
   }
 
+  get predictedCount(): number {
+    return this.matches.filter(m => m.predictedWinner && m.predictedWinner !== '').length;
+  }
 }

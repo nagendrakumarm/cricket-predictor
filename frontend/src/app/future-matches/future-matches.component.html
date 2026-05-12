@@ -1,76 +1,143 @@
 <div class="page-container">
 
   <!-- LEFT: Future Matches -->
-  <div class="matches-section">
-    <h2>Predict Future Matches</h2>
+  <div class="card matches-card">
 
-    
-    <table *ngIf="matches.length > 0" class="matches-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Match</th>
-          <th>Predict Winner</th>
-        </tr>
-      </thead>
+    <div class="card-header">
+      <div class="card-title">
+        <i class="ti ti-crystal-ball" aria-hidden="true"></i>
+        Predict future matches
+      </div>
+      <span class="card-meta">{{ predictedCount }} of {{ matches.length }} predicted</span>
+    </div>
 
-      <tbody>
-        <tr *ngFor="let m of matches">
-          <td>{{ m.match_date }}</td>
-          <td>{{ m.team1Name }} vs {{ m.team2Name }}</td>
-          <td>
-            <select [ngModel]="m.predictedWinner" (change)="selectWinnerEvent(m, $event)">
-              <option value="">Select</option>
-              <option [value]="m.team1Name">{{ m.team1Name }}</option>
-              <option [value]="m.team2Name">{{ m.team2Name }}</option>
-            </select>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Progress bar -->
+    <div class="predict-progress">
+      <div class="progress-bar">
+        <div class="progress-fill"
+             [style.width.%]="(predictedCount / matches.length) * 100">
+        </div>
+      </div>
+      <div class="progress-label">
+        <span>Progress</span>
+        <span>{{ predictedCount }} / {{ matches.length }}</span>
+      </div>
+    </div>
+
+    <div class="card-body" *ngIf="matches.length > 0">
+      <div class="match-row" *ngFor="let m of matches">
+        
+        <div class="match-date">
+          <i class="ti ti-calendar" aria-hidden="true"></i>
+          {{ m.match_date | date:'dd MMM yyyy' }}
+        </div>
+
+        <div class="match-teams">
+          {{ m.team1Name }}
+          <span class="vs-badge">vs</span>
+          {{ m.team2Name }}
+        </div>
+
+        <div class="match-select">
+          <select
+            [ngModel]="m.predictedWinner"
+            [class.predicted]="m.predictedWinner"
+            (change)="selectWinnerEvent(m, $event)">
+            <option value="">Select winner</option>
+            <option [value]="m.team1Name">{{ m.team1Name }}</option>
+            <option [value]="m.team2Name">{{ m.team2Name }}</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card-empty" *ngIf="matches.length === 0">
+      <i class="ti ti-circle-check" aria-hidden="true"></i>
+      <p>All matches have been played.</p>
+    </div>
+
   </div>
 
   <!-- RIGHT: Standings -->
-  <div class="standings-section">
-    <h2>Current Standings</h2>
+  <div class="card standings-card">
 
-    <table class="standings-table" *ngIf="teams.length > 0">
-      <thead>
-        <tr>
-          <th>Team</th>
-          <th>Played</th>
-          <th>Won</th>
-          <th>Lost</th>
-          <th>Points</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let t of predictionTeams; let i = index" 
-            [class.top-four]="i < 4"
-            [ngClass]="{
-                'moved': t.justMoved
-            }"
-            [class.qualified]="t.qualified || (i < 4 && t.played === 14)"
-            [class.eliminated]="t.eliminated || (i >= 4 && t.played === 14)" >
-
-          <td>
-              {{ t.name }} 
-              <span *ngIf="t.eliminated || (i >= 4 && t.played === 14)">(Eliminated)</span>
-              <span *ngIf="t.qualified || (i < 4 && t.played === 14)">(Qualified)</span>
-          </td>
-          <td>{{ t.played }}</td>
-          <td>{{ t.won }}</td>
-          <td>{{ t.lost }}</td>
-          <td>{{ t.points }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div>
-        <button class="simulate-btn" (click)="simulateAll()">Simulate All Matches</button>
-
-        <button class="reset-btn" (click)="resetPage()">Reset Page</button>
+    <div class="card-header">
+      <div class="card-title">
+        <i class="ti ti-table" aria-hidden="true"></i>
+        Current standings
+      </div>
+      <span class="card-meta card-meta--projected">Projected</span>
     </div>
+
+    <div class="card-body" *ngIf="teams.length > 0">
+      <table class="standings-table">
+        <thead>
+          <tr>
+            <th class="col-num">#</th>
+            <th class="col-team">Team</th>
+            <th class="col-stat">W</th>
+            <th class="col-stat col-hide-mobile">L</th>
+            <th class="col-pts">Pts</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <ng-container *ngFor="let t of predictionTeams; let i = index">
+
+            <!-- Qualification cutoff line -->
+            <tr *ngIf="i === 4" class="cutoff-row">
+              <td colspan="5"><div class="cutoff-line"></div></td>
+            </tr>
+
+            <tr
+              [class.row-qualified]="t.qualified || (i < 4 && t.played === 14)"
+              [class.row-eliminated]="t.eliminated || (i >= 4 && t.played === 14)"
+              [class.row-contending]="!t.qualified && !t.eliminated && i < 4 && t.played < 14">
+
+              <td class="col-num">{{ i + 1 }}</td>
+
+              <td class="col-team">
+                <span class="team-name">{{ t.name }}</span>
+
+                <span class="badge badge-qualified"
+                  *ngIf="t.qualified || (i < 4 && t.played === 14)">
+                  Qualified
+                </span>
+                <span class="badge badge-eliminated"
+                  *ngIf="t.eliminated || (i >= 4 && t.played === 14)">
+                  Eliminated
+                </span>
+                <span class="badge badge-contending"
+                  *ngIf="!t.qualified && !t.eliminated && i < 4 && t.played < 14">
+                  Contending
+                </span>
+                <span class="badge badge-moved" *ngIf="t.justMoved">
+                  ▲ moved
+                </span>
+              </td>
+
+              <td>{{ t.won }}</td>
+              <td class="col-hide-mobile">{{ t.lost }}</td>
+              <td class="col-pts">{{ t.points }}</td>
+            </tr>
+
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="simulateAll()">
+        <i class="ti ti-player-play" aria-hidden="true"></i>
+        Simulate all
+      </button>
+      <button class="btn btn-danger" (click)="resetPage()">
+        <i class="ti ti-refresh" aria-hidden="true"></i>
+        Reset
+      </button>
+    </div>
+
   </div>
 
 </div>

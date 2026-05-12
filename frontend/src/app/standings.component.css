@@ -1,54 +1,451 @@
-.standings-table {
-  width: 80%;
-  border-collapse: collapse;
-  margin: 50px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  text-align: center;
-  background: #ffffff;
-  border-radius: 6px;
+/* ─── Wrapper ─────────────────────────────────────── */
+.standings-wrap {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  padding: 1.5rem 0;
+  max-width: 720px;
+}
+
+/* ─── Header ───────────────────────────────────────── */
+.standings-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.standings-header h1 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0 0 2px;
+  color: #1a1a1a;
+}
+
+.standings-subtitle {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* ─── Legend ───────────────────────────────────────── */
+.standings-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #888;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.standings-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-qualified  { background: #1D9E75; }
+.dot-eliminated { background: #E24B4A; }
+.dot-cutoff     { background: #378ADD; }
+
+/* ─── Table card ───────────────────────────────────── */
+.table-card {
+  background: #fff;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.standings-table thead {
-  background: #1976d2;
-  color: white;
+/* ─── Table base ───────────────────────────────────── */
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
-.standings-table th,
-.standings-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #e0e0e0;
+/* ─── Column widths ────────────────────────────────── */
+.standings-table .col-pos  { width: 40px; }
+.standings-table .col-team { width: auto; }
+.standings-table th:nth-child(3),
+.standings-table th:nth-child(4),
+.standings-table th:nth-child(5) { width: 52px; }
+.standings-table th:nth-child(6) { width: 60px; }
+.standings-table th:nth-child(7) { width: 72px; }
+
+/* ─── Header row ───────────────────────────────────── */
+.standings-table thead th {
+  font-size: 11px;
+  font-weight: 500;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 10px 10px;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+  text-align: right;
+  white-space: nowrap;
 }
 
-.standings-table tbody tr:nth-child(even) {
-  background: #f9f9f9;
+.standings-table thead th.col-pos,
+.standings-table thead th.col-team {
+  text-align: left;
 }
 
-.standings-table tbody tr:hover {
-  background: #e3f2fd;
-  cursor: pointer;
-}
-
-.future-btn {
-  background: #1976d2;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
+/* ─── Body cells ───────────────────────────────────── */
+.standings-table tbody td {
+  padding: 10px 10px;
   font-size: 14px;
+  color: #1a1a1a;
+  text-align: right;
+  vertical-align: middle;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.standings-table tbody td.col-pos {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+}
+
+.standings-table tbody td.col-team {
+  text-align: left;
+}
+
+.standings-table tbody td.col-pts {
+  font-weight: 500;
+}
+
+/* ─── Row dividers ─────────────────────────────────── */
+.standings-table tbody tr {
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.07);
+}
+
+.standings-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.standings-table tbody tr:hover td {
+  background: #f5f5f5;
+}
+
+/* ─── Qualification cutoff row ─────────────────────── */
+.cutoff-row td {
+  padding: 0;
+  height: 2px;
+  border: none;
+}
+
+.cutoff-line {
+  height: 2px;
+  background: linear-gradient(90deg, #378ADD 0%, transparent 100%);
+  margin: 0 10px;
+  border-radius: 1px;
+  opacity: 0.5;
+}
+
+/* ─── Row status tints ─────────────────────────────── */
+.row-qualified td { background: #f0fbf6; }
+.row-eliminated td { background: #fef5f5; }
+
+.row-qualified:hover td  { background: #e4f7ef; }
+.row-eliminated:hover td { background: #fdeaea; }
+
+/* ─── Team name ────────────────────────────────────── */
+.team-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ─── Status badges ────────────────────────────────── */
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 99px;
+  margin-left: 6px;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+
+.badge-qualified  { background: #E1F5EE; color: #0F6E56; }
+.badge-eliminated { background: #FCEBEB; color: #A32D2D; }
+
+/* ─── NRR color ────────────────────────────────────── */
+.nrr-pos { color: #0F6E56; }
+.nrr-neg { color: #A32D2D; }
+
+/* ─── Footer ───────────────────────────────────────── */
+.standings-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 1.25rem;
+}
+
+.footnote {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0;
+}
+
+/* ─── Buttons ──────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
+  background: #fff;
+  color: #1a1a1a;
   cursor: pointer;
-  margin: 15px;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
 }
 
-.future-btn:hover {
-  background: #125ea8;
+.btn:hover  { background: #f0f0f0; }
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: #185FA5;
+  color: #fff;
+  border-color: #185FA5;
 }
 
-.loading {
-  font-size: 18px;
-  font-weight: bold;
-  color: #1976d2;
-  margin: 20px;
+.btn-primary:hover  { background: #0C447C; }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-icon { font-size: 15px; line-height: 1; }
+
+/* ─── Row status tints ─────────────────────────────── */
+.standings-table tbody tr.row-qualified td  { background: #f0fbf6; }
+.standings-table tbody tr.row-eliminated td { background: #fef5f5; }
+.standings-table tbody tr.row-contending td { background: #EFF6FF; }
+
+.standings-table tbody tr.row-qualified:hover td  { background: #e4f7ef; }
+.standings-table tbody tr.row-eliminated:hover td { background: #fdeaea; }
+.standings-table tbody tr.row-contending:hover td { background: #DBEAFE; }
+
+/* ─── Dark mode tints ──────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .standings-table tbody tr.row-qualified td  { background: #0d2a1f; }
+  .standings-table tbody tr.row-eliminated td { background: #2a0f0f; }
+  .standings-table tbody tr.row-contending td { background: #0c1e35; }
+
+  .standings-table tbody tr.row-qualified:hover td  { background: #0f3325; }
+  .standings-table tbody tr.row-eliminated:hover td { background: #331313; }
+  .standings-table tbody tr.row-contending:hover td { background: #0f2642; }
+}
+
+/* ─── Dark mode ────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .standings-header h1  { color: #f0f0f0; }
+  .standings-subtitle   { color: #666; }
+  .standings-legend     { color: #666; }
+  .footnote             { color: #555; }
+
+  .table-card {
+    background: #1a1a1a;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .standings-table thead th {
+    color: #666;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .standings-table tbody td { color: #e8e8e8; }
+
+  .standings-table tbody tr {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .standings-table tbody tr:hover td { background: #252525; }
+
+  .row-qualified td  { background: #0d2a1f; }
+  .row-eliminated td { background: #2a0f0f; }
+  .row-contending td { background: #378ADD; }
+
+  .row-qualified:hover td  { background: #0f3325; }
+  .row-eliminated:hover td { background: #331313; }
+
+  .badge-qualified  { background: #0d2a1f; color: #5DCAA5; }
+  .badge-eliminated { background: #2a0f0f; color: #F09595; }
+
+  .nrr-pos { color: #5DCAA5; }
+  .nrr-neg { color: #F09595; }
+
+  .btn {
+    background: #1a1a1a;
+    color: #e8e8e8;
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  .btn:hover { background: #252525; }
+
+  .btn-primary {
+    background: #185FA5;
+    color: #fff;
+    border-color: #185FA5;
+  }
+  .btn-primary:hover { background: #0C447C; }
+}
+
+
+/* ─── Mobile friendly ──────────────────────────────── */
+@media (max-width: 640px) {
+
+  .standings-wrap {
+    padding: 1rem 0;
+  }
+
+  /* ─── Header stacks vertically ─────────────────── */
+  .standings-header {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .standings-header h1 {
+    font-size: 17px;
+  }
+
+  /* ─── Legend wraps tightly ──────────────────────── */
+  .standings-legend {
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  /* ─── Table: hide less critical columns ─────────── */
+  .standings-table thead th:nth-child(3),
+  .standings-table thead th:nth-child(4),
+  .standings-table thead th:nth-child(5),
+  .standings-table tbody td:nth-child(3),
+  .standings-table tbody td:nth-child(4),
+  .standings-table tbody td:nth-child(5) {
+    display: none;
+  }
+
+  /* ─── Tighten remaining columns ─────────────────── */
+  .standings-table .col-pos       { width: 32px; }
+  .standings-table th:nth-child(6) { width: 44px; }
+  .standings-table th:nth-child(7) { width: 58px; }
+
+  .standings-table thead th,
+  .standings-table tbody td {
+    padding: 9px 6px;
+    font-size: 13px;
+  }
+
+  .standings-table tbody td.col-pos {
+    font-size: 11px;
+    padding-left: 4px;
+  }
+
+  /* ─── Team name: shrink + allow wrap ────────────── */
+  .team-name {
+    font-size: 13px;
+  }
+
+  /* ─── Badges: hide text, keep dot indicator ─────── */
+  .badge {
+    font-size: 0;
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border-radius: 50%;
+    margin-left: 5px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  .badge-qualified  { background: #1D9E75; }
+  .badge-eliminated { background: #E24B4A; }
+
+  /* ─── Footer stacks ──────────────────────────────── */
+  .standings-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 1rem;
+  }
+
+  /* ─── Button full width ──────────────────────────── */
+  .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 11px 18px;
+  }
+}
+
+/* ─── Very small screens ───────────────────────────── */
+@media (max-width: 360px) {
+  .standings-legend {
+    display: none;
+  }
+
+  .standings-table thead th,
+  .standings-table tbody td {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  .team-name {
+    font-size: 12px;
+  }
+}
+
+
+/* ─── Top 4 (contending, not yet qualified) ────────── */
+.standings-table tbody tr.top-four:not(.row-qualified):not(.row-eliminated) td {
+  background: #EFF6FF;
+}
+
+.standings-table tbody tr.top-four:not(.row-qualified):not(.row-eliminated):hover td {
+  background: #DBEAFE;
+}
+
+/* ─── Dark mode ─────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .standings-table tbody tr.top-four:not(.row-qualified):not(.row-eliminated) td {
+    background: #0c1e35;
+  }
+
+  .standings-table tbody tr.top-four:not(.row-qualified):not(.row-eliminated):hover td {
+    background: #0f2642;
+  }
+}
+
+/* ─── Mobile ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .standings-table tbody tr.top-four:not(.row-qualified):not(.row-eliminated) td {
+    background: #EFF6FF;
+  }
+
+  .standings-table tbody tr.top-four:not(.row-qualified):not(.row-eliminated):hover td {
+    background: #DBEAFE;
+  }
+}
+
+/* ─── Legend dot ────────────────────────────────────── */
+.dot-contending { background: #378ADD; }
+
+/* ─── Contending badge ──────────────────────────────── */
+.badge-contending { background: #EFF6FF; color: #185FA5; }
+
+/* ─── Mobile: badge collapses to dot ───────────────── */
+@media (max-width: 640px) {
+  .badge-contending { background: #378ADD; }
 }
