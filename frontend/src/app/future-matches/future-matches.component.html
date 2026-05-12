@@ -76,8 +76,9 @@
           <tr>
             <th class="col-num">#</th>
             <th class="col-team">Team</th>
-            <th class="col-stat">W</th>
-            <th class="col-stat col-hide-mobile">L</th>
+            <th class="col-stat">Played</th>
+            <th class="col-stat">Won</th>
+            <th class="col-stat col-hide-mobile">Lost</th>
             <th class="col-pts">Pts</th>
           </tr>
         </thead>
@@ -116,9 +117,9 @@
                   ▲ moved
                 </span>
               </td>
-
-              <td>{{ t.won }}</td>
-              <td class="col-hide-mobile">{{ t.lost }}</td>
+              <td class="col-stat">{{ t.played }}</td>
+              <td class="col-stat">{{ t.won }}</td>
+              <td class="col-stat col-hide-mobile">{{ t.lost }}</td>
               <td class="col-pts">{{ t.points }}</td>
             </tr>
 

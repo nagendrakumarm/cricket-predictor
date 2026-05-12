@@ -19,11 +19,11 @@
         <tr>
           <th class="col-pos">#</th>
           <th class="col-team">Team</th>
-          <th>P</th>
-          <th>W</th>
-          <th>L</th>
-          <th>Pts</th>
-          <th>NRR</th>
+          <th class="col-num">Played</th>
+          <th class="col-stat">Won</th>
+          <th class="col-stat">Lost</th>
+          <th class="col-pts">Points</th>
+          <th class="col-stat">NRR</th>
         </tr>
       </thead>
 
@@ -51,11 +51,11 @@
               <span class="badge badge-contending" *ngIf="!s.qualified && !s.eliminated && i < 4"> (Contending)</span>
             </td>
 
-            <td>{{ s.played }}</td>
-            <td>{{ s.won }}</td>
-            <td>{{ s.lost }}</td>
+            <td class="col-num">{{ s.played }}</td>
+            <td class="col-stat">{{ s.won }}</td>
+            <td class="col-stat">{{ s.lost }}</td>
             <td class="col-pts">{{ s.points }}</td>
-            <td [class.nrr-pos]="s.nrr >= 0" [class.nrr-neg]="s.nrr < 0">
+            <td class="col-pts" [class.nrr-pos]="s.nrr >= 0" [class.nrr-neg]="s.nrr < 0">
               {{ s.nrr >= 0 ? '+' : '' }}{{ s.nrr | number:'1.3-3' }}
             </td>
           </tr>
