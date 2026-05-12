@@ -47,4 +47,10 @@ export class StandingsComponent implements OnInit {
     console.log('Future matches clicked');
     this.router.navigate(['/future-matches', 3]);
   }
+ 
+  toggleExpandTeam(team: any): void {
+    // only toggle on mobile — ignore on desktop
+    if (window.innerWidth > 580) return;
+    team.expanded = !team.expanded;
+  }    
 }

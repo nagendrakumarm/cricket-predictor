@@ -289,3 +289,98 @@
   .standings-table thead th.col-stat,
   .standings-table tbody td:nth-child(3) { display: none; }
 }
+
+.standings-table thead th.col-expand {
+  display: none;
+  width: 28px;
+}
+
+@media (max-width: 580px) {
+  .standings-table thead th.col-expand { display: table-cell; }
+}
+
+/* ─── Expand chevron (hidden on desktop) ────────────── */
+.col-expand {
+  display: none;
+  width: 28px;
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
+}
+
+/* ─── Detail row (hidden on desktop) ───────────────── */
+.detail-row { display: none; }
+.detail-cell { padding: 0 12px 10px !important; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 8px 0 4px;
+  border-top: 0.5px dashed rgba(0, 0, 0, 0.1);
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.detail-label {
+  font-size: 10px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* ─── Row expanded state ────────────────────────────── */
+.row-expanded td {
+  border-bottom: none;
+}
+
+/* ─── Mobile: show chevron + enable expand ──────────── */
+@media (max-width: 580px) {
+  .col-expand        { display: table-cell; }
+  .detail-row        { display: table-row; }
+
+  /* make rows feel tappable */
+  .standings-table tbody tr { cursor: pointer; }
+  .standings-table tbody tr:active td { opacity: 0.7; }
+
+  /* chevron transition */
+  .col-expand i {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+}
+
+/* ─── Dark mode ─────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .detail-label { color: #555; }
+  .detail-value { color: #e8e8e8; }
+  .detail-grid  { border-top-color: rgba(255, 255, 255, 0.08); }
+}
+
+.ti-chevron-down,
+.ti-chevron-up {
+  font-size: 16px;
+  color: #555;
+  transition: transform 0.2s ease;
+}
+
+.ti-chevron-down::before,
+.ti-chevron-up::before {
+  font-size: 16px;
+  color: inherit;
+}
+
+.ti-chevron-up {
+  transform: rotate(180deg);
+}

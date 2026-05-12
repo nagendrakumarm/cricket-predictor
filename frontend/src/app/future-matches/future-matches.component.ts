@@ -179,4 +179,10 @@ export class FutureMatchesComponent implements OnInit {
   get predictedCount(): number {
     return this.matches.filter(m => m.predictedWinner && m.predictedWinner !== '').length;
   }
+
+  toggleExpandTeam(team: any): void {
+    // only toggle on mobile — ignore on desktop
+    if (window.innerWidth > 580) return;
+    team.expanded = !team.expanded;
+  }  
 }

@@ -80,6 +80,7 @@
             <th class="col-stat">Won</th>
             <th class="col-stat col-hide-mobile">Lost</th>
             <th class="col-pts">Pts</th>
+            <th class="col-expand"></th>
           </tr>
         </thead>
 
@@ -94,7 +95,9 @@
             <tr
               [class.row-qualified]="t.qualified || (i < 4 && t.played === 14)"
               [class.row-eliminated]="t.eliminated || (i >= 4 && t.played === 14)"
-              [class.row-contending]="!t.qualified && !t.eliminated && i < 4 && t.played < 14">
+              [class.row-contending]="!t.qualified && !t.eliminated && i < 4 && t.played < 14"
+              [class.row-expanded]="t.expanded"
+              (click)="toggleExpandTeam(t)">
 
               <td class="col-num">{{ i + 1 }}</td>
 
@@ -121,8 +124,40 @@
               <td class="col-stat">{{ t.won }}</td>
               <td class="col-stat col-hide-mobile">{{ t.lost }}</td>
               <td class="col-pts">{{ t.points }}</td>
+
+              <!-- Expandeded (mobile)-->
+              <td class="col-expand">
+                <i class="ti" [class.ti-chevron-down]="!t.expanded" [class.ti-chevron-up]="t.expanded" aria-hidden="true"></i>
+              </td>
             </tr>
 
+            <!-- Expanded content (mobile) -->
+            <tr class="detail-row" *ngIf="t.expanded"
+              [class.row-qualified]="t.qualified || (i < 4 && t.played === 14)"
+              [class.row-eliminated]="t.eliminated || (i >= 4 && t.played === 14)"
+              [class.row-contending]="!t.qualified && !t.eliminated && i < 4 && t.played < 14">
+                
+              <td colspan="7" class="detail-cell">
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Played</span>
+                    <span class="detail-value">{{ t.played }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Won</span>
+                    <span class="detail-value">{{ t.won }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Lost</span>
+                    <span class="detail-value">{{ t.lost }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Points</span>
+                    <span class="detail-value">{{ t.points }}</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
           </ng-container>
         </tbody>
       </table>
