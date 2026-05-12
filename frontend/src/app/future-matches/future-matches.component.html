@@ -127,7 +127,9 @@
 
               <!-- Expandeded (mobile)-->
               <td class="col-expand">
-                <i class="ti" [class.ti-chevron-down]="!t.expanded" [class.ti-chevron-up]="t.expanded" aria-hidden="true"></i>
+                <span class="material-icons rotate-icon" [class.rotated]="t.expanded">
+                  expand_more
+                </span>
               </td>
             </tr>
 

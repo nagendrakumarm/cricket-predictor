@@ -368,19 +368,18 @@
   .detail-grid  { border-top-color: rgba(255, 255, 255, 0.08); }
 }
 
-.ti-chevron-down,
-.ti-chevron-up {
-  font-size: 16px;
+.material-icons {
+  font-size: 20px;
   color: #555;
+  cursor: pointer;
   transition: transform 0.2s ease;
 }
 
-.ti-chevron-down::before,
-.ti-chevron-up::before {
-  font-size: 16px;
-  color: inherit;
+.rotate-icon {
+  transition: transform 0.2s ease;
 }
 
-.ti-chevron-up {
+.rotate-icon.rotated {
   transform: rotate(180deg);
 }
+
