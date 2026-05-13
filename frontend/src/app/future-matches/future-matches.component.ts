@@ -76,6 +76,10 @@ export class FutureMatchesComponent implements OnInit {
     const t1 = this.predictionTeams.find(t => t.id === match.team1);
     const t2 = this.predictionTeams.find(t => t.id === match.team2);
 
+    if(winner === '') {
+      t1.played--;
+      t2.played--;
+    }
     if(!previousWinner)
     {
       t1.played++;
