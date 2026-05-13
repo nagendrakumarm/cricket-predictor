@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { ApiService } from '../api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -68,8 +69,11 @@ export class AdminComponent implements OnInit {
     }
     this.errorMessage = '';
     this.loading = true;
+    let winningTeam = this.selectedWinner === this.getTeamName(this.team1.id) 
+                    ? this.team1.id 
+                    : this.team2.id;
 
-    this.api.updateMatchResult(this.match.id, this.selectedWinner).subscribe({
+    this.api.updateMatchResult(this.match.id, winningTeam).subscribe({
       next: () => {
         this.team1.played += 1;
         this.team2.played += 1;
@@ -97,12 +101,15 @@ export class AdminComponent implements OnInit {
             this.team2Nrr, 
             this.team2Points);
 
-        t1$.subscribe(() => {
-          t2$.subscribe(() => {
+        forkJoin([t1$, t2$]).subscribe({
+          next: () => {
             this.successMessage = 'Match result and NRR updated successfully!';
             this.loading = false;
-            setTimeout(() => this.loadData(), 1500);
-          });
+          },
+          error: () => {
+            this.errorMessage = 'Failed to update. Please try again.';
+            this.loading = false;
+          }
         });
       },
       error: err => {

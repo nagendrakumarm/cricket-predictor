@@ -84,9 +84,11 @@ export class FutureMatchesComponent implements OnInit {
       // Revert previous winner's stats
       if(previousWinner === t1.name) {    
         t1.won--;
+        t2.lost--;
         t1.points -= 2;
       } else if(previousWinner === t2.name) {
         t2.won--;
+        t1.lost--;
         t2.points -= 2;
       }     
     }

@@ -19,7 +19,7 @@ app.add_middleware(
         "https://nagendrakumarm.github.io"],
     allow_origin_regex=".*",
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
